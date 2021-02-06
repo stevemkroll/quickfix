@@ -74,7 +74,6 @@ func generateComment(problem lint.Problem) (string, error) {
 		if match {
 			name = l
 			nameSlice := strings.Split(name, "(")
-			// name = strings.ReplaceAll(name, "()", "")
 			return fmt.Sprintf("// %+s ...", nameSlice[0]), nil
 		}
 	}
