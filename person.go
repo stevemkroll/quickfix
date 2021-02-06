@@ -12,6 +12,10 @@ type Person struct {
 	Hair string `json:"hair"`
 }
 
+func GetHair(p Person) string {
+	return p.Hair
+}
+
 func (p *Person) GetAge() uint {
 	return p.Age
 }
