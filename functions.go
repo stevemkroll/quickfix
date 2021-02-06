@@ -125,7 +125,7 @@ func fixFile(path string) error {
 	defer file.Close()
 
 	for i := range newFile {
-		_, err := file.WriteString(newFile[i])
+		_, err := file.WriteString(newFile[i] + "\n")
 		if err != nil {
 			log.Println(err)
 			return errors.New("err... cannot write file")
