@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"regexp"
 	"strings"
 
@@ -117,7 +118,7 @@ func fixFile(path string) error {
 		return errors.New("err... fixing file")
 	}
 
-	file, err := os.OpenFile(path, os.O_RDONLY, os.ModeDir)
+	file, err := os.OpenFile(path, os.O_WRONLY, os.ModeDir)
 	if err != nil {
 		return errors.New("err... cannot find file")
 	}
@@ -126,6 +127,7 @@ func fixFile(path string) error {
 	for i := range newFile {
 		_, err := file.WriteString(newFile[i])
 		if err != nil {
+			log.Println(err)
 			return errors.New("err... cannot write file")
 		}
 	}
