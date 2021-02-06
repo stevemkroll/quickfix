@@ -53,3 +53,10 @@ func TestGenerateNewFile(t *testing.T) {
 		t.Log(newFile[i])
 	}
 }
+
+func TestFixFile(t *testing.T) {
+	err := fixFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+}

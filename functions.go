@@ -110,3 +110,24 @@ func generateNewFile(path string) ([]string, error) {
 	}
 	return fileSlice, nil
 }
+
+func fixFile(path string) error {
+	newFile, err := generateNewFile(path)
+	if err != nil {
+		return errors.New("err... fixing file")
+	}
+
+	file, err := os.OpenFile(path, os.O_RDONLY, os.ModeDir)
+	if err != nil {
+		return errors.New("err... cannot find file")
+	}
+	defer file.Close()
+
+	for i := range newFile {
+		_, err := file.WriteString(newFile[i])
+		if err != nil {
+			return errors.New("err... cannot write file")
+		}
+	}
+	return nil
+}
