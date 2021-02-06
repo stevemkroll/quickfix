@@ -64,7 +64,6 @@ func getWarnings(path string) ([]lint.Problem, error) {
 func generateComment(problem lint.Problem) (string, error) {
 	line := problem.LineText
 	lineSlice := strings.Split(line, " ")
-
 	name := ""
 	for _, l := range lineSlice {
 		match, err := regexp.MatchString(`^([A-Z]{1,}[a-zA-Z()]{1,})$`, l)
@@ -78,4 +77,36 @@ func generateComment(problem lint.Problem) (string, error) {
 		}
 	}
 	return "", errors.New("err... generating func name")
+}
+
+func insertComment(file []string, comment string, offset int) []string {
+	pre := make([]string, len(file))
+	post := make([]string, len(file))
+	copy(pre, file)
+	copy(post, file)
+	pre = pre[:offset]
+	post = post[offset:]
+	newFile := append(pre, comment)
+	newFile = append(newFile, post...)
+	return newFile
+}
+
+func generateNewFile(path string) ([]string, error) {
+	fileSlice, err := getFileLines(path)
+	if err != nil {
+		return nil, errors.New("err... generating file")
+	}
+	warningSlice, err := getWarnings(path)
+	if err != nil {
+		return nil, errors.New("err... generating file")
+	}
+	for i, w := range warningSlice {
+		offset := (w.Position.Line + i) - 1
+		comment, err := generateComment(w)
+		if err != nil {
+			return nil, errors.New("err... generating file")
+		}
+		fileSlice = insertComment(fileSlice, comment, offset)
+	}
+	return fileSlice, nil
 }

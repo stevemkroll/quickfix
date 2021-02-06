@@ -1,6 +1,8 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 var path string
 
@@ -39,5 +41,15 @@ func TestGenerateComments(t *testing.T) {
 			t.Fatal(err)
 		}
 		t.Log(comment)
+	}
+}
+
+func TestGenerateNewFile(t *testing.T) {
+	newFile, err := generateNewFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i := range newFile {
+		t.Log(newFile[i])
 	}
 }
