@@ -16,11 +16,11 @@ import (
 
 func getFileLines(path string) ([]string, error) {
 	if path == "" {
-		return nil, errors.New("err... no file path")
+		return nil, errors.New("err... getting file lines")
 	}
 	file, err := os.OpenFile(path, os.O_RDONLY, os.ModeDir)
 	if err != nil {
-		return nil, errors.New("err... cannot find file")
+		return nil, errors.New("err... getting file lines")
 	}
 	defer file.Close()
 	var lines []string
@@ -29,28 +29,28 @@ func getFileLines(path string) ([]string, error) {
 		lines = append(lines, scanner.Text())
 	}
 	if err := scanner.Err(); err != nil {
-		return nil, errors.New("err... parsing file")
+		return nil, errors.New("err... getting file lines")
 	}
 	return lines, nil
 }
 
 func getWarnings(path string) ([]lint.Problem, error) {
 	if path == "" {
-		return nil, errors.New("err... no file path")
+		return nil, errors.New("err... getting lint warnings")
 	}
 	file, err := os.OpenFile(path, os.O_RDONLY, os.ModeDir)
 	if err != nil {
-		return nil, errors.New("err... cannot find file")
+		return nil, errors.New("err... getting lint warnings")
 	}
 	defer file.Close()
 	fbytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, errors.New("err... cannot read file")
+		return nil, errors.New("err... getting lint warnings")
 	}
 	l := lint.Linter{}
 	problems, err := l.Lint(path, fbytes)
 	if err != nil {
-		return nil, errors.New("err... lint error")
+		return nil, errors.New("err... getting lint warnings")
 	}
 	var warnings []lint.Problem
 	for _, p := range problems {
@@ -69,7 +69,7 @@ func generateComment(problem lint.Problem) (string, error) {
 	for _, l := range lineSlice {
 		match, err := regexp.MatchString(`^([A-Z]{1,}[a-zA-Z()]{1,})$`, l)
 		if err != nil {
-			return "", errors.New("err... regex error")
+			return "", errors.New("err... generating comment")
 		}
 		if match {
 			name = l
@@ -77,7 +77,7 @@ func generateComment(problem lint.Problem) (string, error) {
 			return fmt.Sprintf("// %+s ...", nameSlice[0]), nil
 		}
 	}
-	return "", errors.New("err... generating func name")
+	return "", errors.New("err... generating comment")
 }
 
 func insertComment(file []string, comment string, offset int) []string {
@@ -120,7 +120,7 @@ func fixFile(path string) error {
 
 	file, err := os.OpenFile(path, os.O_WRONLY, os.ModeDir)
 	if err != nil {
-		return errors.New("err... cannot find file")
+		return errors.New("err... fixing file")
 	}
 	defer file.Close()
 
@@ -128,7 +128,7 @@ func fixFile(path string) error {
 		_, err := file.WriteString(newFile[i] + "\n")
 		if err != nil {
 			log.Println(err)
-			return errors.New("err... cannot write file")
+			return errors.New("err... fixing file")
 		}
 	}
 	return nil
