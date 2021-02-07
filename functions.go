@@ -57,6 +57,13 @@ func getWarnings(path string) ([]lint.Problem, error) {
 		if p.Confidence == 0.2 {
 			continue
 		}
+		if p.Category != "comments" {
+			continue
+		}
+		text := strings.Split(p.Text, " ")
+		if text[0] != "exported" {
+			continue
+		}
 		warnings = append(warnings, p)
 	}
 	return warnings, nil

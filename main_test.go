@@ -12,8 +12,9 @@ func TestMain(t *testing.T) {
 	err := filepath.Walk("./", func(path string, info os.FileInfo, err error) error {
 		path = filepath.Clean(path)
 		dir, file := filepath.Split(path)
-		if !strings.HasPrefix(dir, ".") && !strings.HasPrefix(file, ".") {
-			// if !strings.HasPrefix(elem, ".") {
+		if !strings.HasPrefix(dir, ".") &&
+			!strings.HasPrefix(file, ".") &&
+			strings.Contains(file, ".go") {
 			files = append(files, path)
 		}
 		return nil
@@ -21,13 +22,10 @@ func TestMain(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	for i := range files {
-		// t.Log(files[i])
 		err := fixFile(files[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
-
 }
