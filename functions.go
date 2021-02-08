@@ -92,6 +92,9 @@ func generateComment(problem lint.Problem) (string, error) {
 			return "", errors.New("err... generating comment")
 		}
 		if match {
+			if lineSlice[0] == "func" && !strings.ContainsAny(l, "(") {
+				continue
+			}
 			name = l
 			nameSlice := strings.Split(name, "(")
 			return fmt.Sprintf("// %+s ...", nameSlice[0]), nil
