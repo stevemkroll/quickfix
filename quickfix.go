@@ -22,13 +22,13 @@ func PreviewWarnings() {
 	})
 	if err != nil {
 		log.Printf("\n\n%+v\n\n", err.Error())
-		panic(err)
+		// panic(err)
 	}
 	for i := range files {
 		warnings, err := getWarnings(files[i])
 		if err != nil {
 			log.Printf("\n\n%+v\n\n", err.Error())
-			panic(err)
+			// panic(err)
 		}
 		if len(warnings) > 0 {
 			for i := range warnings {
@@ -52,14 +52,12 @@ func FixAll() {
 		return nil
 	})
 	if err != nil {
-		log.Printf("\n\n%+v\n\n", err.Error())
-		panic(err)
+		return
 	}
 	for i := range files {
 		err := fixFile(files[i])
 		if err != nil {
-			log.Printf("\n\n%+v\n\n", err.Error())
-			panic(err)
+			return
 		}
 	}
 }

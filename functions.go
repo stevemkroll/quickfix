@@ -73,6 +73,10 @@ func getWarnings(path string) ([]lint.Problem, error) {
 			continue
 		}
 
+		if line[0] == "func" && (text[1] != "function" && text[1] != "method") {
+			continue
+		}
+
 		warnings = append(warnings, p)
 	}
 	return warnings, nil
@@ -83,7 +87,7 @@ func generateComment(problem lint.Problem) (string, error) {
 	lineSlice := strings.Split(line, " ")
 	name := ""
 	for _, l := range lineSlice {
-		match, err := regexp.MatchString(`^([A-Z]{1,}[a-zA-Z()]{1,})$`, l)
+		match, err := regexp.MatchString(`^([A-Z]{1,}[\S()]{1,})$`, l)
 		if err != nil {
 			return "", errors.New("err... generating comment")
 		}
@@ -111,16 +115,19 @@ func insertComment(file []string, comment string, offset int) []string {
 func generateNewFile(path string) ([]string, error) {
 	fileSlice, err := getFileLines(path)
 	if err != nil {
+		log.Println(err, path)
 		return nil, errors.New("err... generating file")
 	}
 	warningSlice, err := getWarnings(path)
 	if err != nil {
+		log.Println(err, path)
 		return nil, errors.New("err... generating file")
 	}
 	for i, w := range warningSlice {
 		offset := (w.Position.Line + i) - 1
 		comment, err := generateComment(w)
 		if err != nil {
+			log.Println(err, path)
 			return nil, errors.New("err... generating file")
 		}
 		fileSlice = insertComment(fileSlice, comment, offset)
@@ -131,12 +138,12 @@ func generateNewFile(path string) ([]string, error) {
 func fixFile(path string) error {
 	newFile, err := generateNewFile(path)
 	if err != nil {
-		return errors.New("err... fixing file")
+		return errors.New("err... fixing file in generateNewFile")
 	}
 
 	file, err := os.OpenFile(path, os.O_WRONLY, os.ModeDir)
 	if err != nil {
-		return errors.New("err... fixing file")
+		return errors.New("err... fixing file in OpenFile")
 	}
 	defer file.Close()
 
@@ -144,7 +151,7 @@ func fixFile(path string) error {
 		_, err := file.WriteString(newFile[i] + "\n")
 		if err != nil {
 			log.Println(err)
-			return errors.New("err... fixing file")
+			return errors.New("err... fixing file in WriteString")
 		}
 	}
 	return nil
