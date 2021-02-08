@@ -1,6 +1,8 @@
 package pet
 
-var Nameickname string
+var (
+	Nameickname string
+)
 
 var Color string
 
