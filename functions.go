@@ -69,8 +69,7 @@ func getWarnings(path string) ([]lint.Problem, error) {
 		if line[0] != "var" &&
 			line[0] != "const" &&
 			line[0] != "type" &&
-			line[0] != "function" &&
-			line[0] != "method" {
+			line[0] != "func" {
 			continue
 		}
 
