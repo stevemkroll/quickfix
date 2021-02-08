@@ -19,3 +19,7 @@ func GetHair(p Person) string {
 func (p *Person) GetAge() uint {
 	return p.Age
 }
+
+func (p Person) ValidateName() bool {
+	return true
+}
