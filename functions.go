@@ -64,6 +64,16 @@ func getWarnings(path string) ([]lint.Problem, error) {
 		if text[0] != "exported" {
 			continue
 		}
+
+		line := strings.Split(p.LineText, " ")
+		if line[0] != "var" &&
+			line[0] != "const" &&
+			line[0] != "type" &&
+			line[0] != "function" &&
+			line[0] != "method" {
+			continue
+		}
+
 		warnings = append(warnings, p)
 	}
 	return warnings, nil

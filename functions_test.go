@@ -7,7 +7,7 @@ import (
 var path string
 
 func init() {
-	path = "./person.go"
+	path = "./pet/pet.go"
 }
 
 func TestGetFileLines(t *testing.T) {
