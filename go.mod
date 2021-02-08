@@ -1,4 +1,4 @@
-module quickfix
+module github.com/stevemkroll/quickfix
 
 go 1.15
 
