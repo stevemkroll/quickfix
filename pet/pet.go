@@ -6,5 +6,5 @@ var Color string
 
 type Pet struct {
 	Nickname string `json:"nickname"`
-	Color    string `json:"Color`
+	Color    string `json:"color"`
 }
